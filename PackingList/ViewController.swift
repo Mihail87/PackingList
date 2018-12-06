@@ -35,6 +35,8 @@ class ViewController: UIViewController {
   @IBOutlet var tableView: UITableView!
   @IBOutlet var buttonMenu: UIButton!
   @IBOutlet var titleLabel: UILabel!
+    
+  @IBOutlet var menuHeightConstraint: NSLayoutConstraint!
   
   //MARK:- further class variables
   
@@ -47,7 +49,11 @@ class ViewController: UIViewController {
   @IBAction func toggleMenu(_ sender: AnyObject) {
     menuIsOpen = !menuIsOpen
 
-		//TODO: Build your first constraint animation!
+    menuHeightConstraint.constant = menuIsOpen ? 200 : 80
+    
+    UIView.animate(withDuration: 0.33, delay: 0.0, options: .curveEaseIn, animations: {
+        self.view.layoutIfNeeded()
+    }, completion: nil)
   }
   
   func showItem(_ index: Int) {
