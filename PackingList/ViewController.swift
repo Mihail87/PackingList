@@ -37,6 +37,7 @@ class ViewController: UIViewController {
   @IBOutlet var titleLabel: UILabel!
     
   @IBOutlet var menuHeightConstraint: NSLayoutConstraint!
+    @IBOutlet var buttonMenuTrailingConstraint: NSLayoutConstraint!
   
   //MARK:- further class variables
   
@@ -50,10 +51,14 @@ class ViewController: UIViewController {
     menuIsOpen = !menuIsOpen
 
     menuHeightConstraint.constant = menuIsOpen ? 200 : 80
+    buttonMenuTrailingConstraint.constant = menuIsOpen ? 16 : 8
     
     UIView.animate(withDuration: 0.33, delay: 0.0, options: .curveEaseIn, animations: {
+        let angle: CGFloat = self.menuIsOpen ? .pi / 4 : 0.0
+        self.buttonMenu.transform = CGAffineTransform(rotationAngle: angle)
         self.view.layoutIfNeeded()
     }, completion: nil)
+    
   }
   
   func showItem(_ index: Int) {
