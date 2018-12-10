@@ -30,14 +30,13 @@ import UIKit
 
 class ViewController: UIViewController {
   
-  //MARK:- IB outlets
+  //MARK:IB outlets
   
   @IBOutlet var tableView: UITableView!
   @IBOutlet var buttonMenu: UIButton!
   @IBOutlet var titleLabel: UILabel!
-    
   @IBOutlet var menuHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var buttonMenuTrailingConstraint: NSLayoutConstraint!
+  @IBOutlet var buttonMenuTrailingConstraint: NSLayoutConstraint!
   
   //MARK:- further class variables
   
@@ -61,9 +60,53 @@ class ViewController: UIViewController {
     
   }
   
+  /// Called when an item is selected
+  ///
+  /// - Parameter index: identify the proper item
   func showItem(_ index: Int) {
     let imageView = makeImageView(index: index)
     view.addSubview(imageView)
+    
+    let conX = imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+    let conBottom = imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: imageView.frame.height)
+    let conWidth = imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.33, constant: -50.0)
+    let conHeight = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
+    
+    NSLayoutConstraint.activate([conX, conBottom, conWidth, conHeight])
+    
+    // Update the layout - otherwise it will be done right before the animation starts and it will look buggy
+    view.layoutIfNeeded()
+    
+    UIView.animate(withDuration: 0.5) {
+        conBottom.constant = -imageView.frame.height * 2
+        conWidth.constant = 0.0
+        self.view.layoutIfNeeded()
+    }
+    
+    view.layoutIfNeeded()
+
+    // I've added the closure directly in the param list
+//    let animateItems: () -> Void = {
+//        conBottom.constant = imageView.frame.height
+//        conWidth.constant = -50.0
+//        self.view.layoutIfNeeded()
+//    }
+
+    // I forgot to remove the image view from the superview... Because they will keep piling up
+//    UIView.animate(withDuration: 0.5, delay: 0.7, options: .curveEaseInOut, animations: {
+//        conBottom.constant = imageView.frame.height
+//        conWidth.constant = -50.0
+//        self.view.layoutIfNeeded()
+//    }, completion: nil)
+    
+    UIView.animate(withDuration: 0.5, delay: 0.7, options: .curveEaseInOut, animations: {
+        conBottom.constant = imageView.frame.height
+        conWidth.constant = -50.0
+        self.view.layoutIfNeeded()
+    }) { _ in
+        imageView.removeFromSuperview()
+    }
+
   }
 
   func transitionCloseMenu() {
