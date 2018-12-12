@@ -68,8 +68,6 @@ class ViewController: UIViewController {
     menuHeightConstraint.constant = menuIsOpen ? 200 : 80
     buttonMenuTrailingConstraint.constant = menuIsOpen ? 16 : 8
     
-    
-    
     UIView.animate(withDuration: 0.9,
                    delay: 0.0,
                    usingSpringWithDamping: 0.5,
@@ -100,11 +98,23 @@ class ViewController: UIViewController {
     // Update the layout - otherwise it will be done right before the animation starts and it will look buggy
     view.layoutIfNeeded()
     
-    UIView.animate(withDuration: 0.5) {
-        conBottom.constant = -imageView.frame.height * 2
-        conWidth.constant = 0.0
-        self.view.layoutIfNeeded()
-    }
+//    UIView.animate(withDuration: 0.5) {
+//        conBottom.constant = -imageView.frame.height * 2
+//        conWidth.constant = 0.0
+//        self.view.layoutIfNeeded()
+//    }
+    
+    UIView.animate(withDuration: 0.5,
+                   delay: 0,
+                   usingSpringWithDamping: 0.5,
+                   initialSpringVelocity: 6,
+                   options: .curveEaseInOut,
+                   animations:{
+                    conBottom.constant = -imageView.frame.height * 2
+                    conWidth.constant = 0.0
+                    self.view.layoutIfNeeded()
+                },
+                   completion: nil)
     
     view.layoutIfNeeded()
 
