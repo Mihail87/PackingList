@@ -60,7 +60,7 @@ class ViewController: UIViewController {
     titleLabel.superview?.constraints.forEach { constraint in
         if constraint.firstItem === titleLabel &&
             constraint.firstAttribute == .centerX {
-            constraint.constant = menuIsOpen ? -100.0 : 0.0
+            constraint.constant = self.menuIsOpen ? -100.0 : 0.0
             return
         }
     }
@@ -70,11 +70,16 @@ class ViewController: UIViewController {
     
     
     
-    UIView.animate(withDuration: 0.33, delay: 0.0, options: .curveEaseIn, animations: {
-        let angle: CGFloat = self.menuIsOpen ? .pi / 4 : 0.0
-        self.buttonMenu.transform = CGAffineTransform(rotationAngle: angle)
-        self.view.layoutIfNeeded()
-    }, completion: nil)
+    UIView.animate(withDuration: 0.9,
+                   delay: 0.0,
+                   usingSpringWithDamping: 0.5,
+                   initialSpringVelocity: 8,
+                   options: .curveEaseIn,
+                   animations: {
+                        let angle: CGFloat = self.menuIsOpen ? .pi / 4 : 0.0
+                        self.buttonMenu.transform = CGAffineTransform(rotationAngle: angle)
+                        self.view.layoutIfNeeded()
+                    }, completion: nil)
     
   }
   
