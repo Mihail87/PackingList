@@ -37,6 +37,8 @@ class ViewController: UIViewController {
   @IBOutlet var titleLabel: UILabel!
   @IBOutlet var menuHeightConstraint: NSLayoutConstraint!
   @IBOutlet var buttonMenuTrailingConstraint: NSLayoutConstraint!
+  @IBOutlet var titleCenterY: NSLayoutConstraint!
+  @IBOutlet var titleCenterY_Open: NSLayoutConstraint!
   
   //MARK:- further class variables
   
@@ -48,9 +50,25 @@ class ViewController: UIViewController {
   
   @IBAction func toggleMenu(_ sender: AnyObject) {
     menuIsOpen = !menuIsOpen
+    
+    titleLabel.text = menuIsOpen ? "Select Item!" : "Packing List"
+    view.layoutIfNeeded()
+    
+    titleCenterY.isActive = !menuIsOpen
+    titleCenterY_Open.isActive = menuIsOpen
+    
+    titleLabel.superview?.constraints.forEach { constraint in
+        if constraint.firstItem === titleLabel &&
+            constraint.firstAttribute == .centerX {
+            constraint.constant = menuIsOpen ? -100.0 : 0.0
+            return
+        }
+    }
 
     menuHeightConstraint.constant = menuIsOpen ? 200 : 80
     buttonMenuTrailingConstraint.constant = menuIsOpen ? 16 : 8
+    
+    
     
     UIView.animate(withDuration: 0.33, delay: 0.0, options: .curveEaseIn, animations: {
         let angle: CGFloat = self.menuIsOpen ? .pi / 4 : 0.0
