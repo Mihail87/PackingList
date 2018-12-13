@@ -35,6 +35,7 @@ class ViewController: UIViewController {
   @IBOutlet var tableView: UITableView!
   @IBOutlet var buttonMenu: UIButton!
   @IBOutlet var titleLabel: UILabel!
+    
   @IBOutlet var menuHeightConstraint: NSLayoutConstraint!
   @IBOutlet var buttonMenuTrailingConstraint: NSLayoutConstraint!
   @IBOutlet var titleCenterY: NSLayoutConstraint!
@@ -150,10 +151,23 @@ class ViewController: UIViewController {
   }
 
   func transitionCloseMenu() {
+    
     delay(seconds: 0.35, completion: {
-      self.toggleMenu(self)
+        self.toggleMenu(self)
     })
+    
+    let titleBar = slider.superview!
+    UIView.transition(with: titleBar,
+                      duration: 0.6,
+                      options: .transitionFlipFromBottom,
+                      animations: {
+                        self.slider.isHidden = true
+                    }, completion: { _ in
+                        self.slider.isHidden = false
+                    })
+    
 	}
+    
 }
 
 //////////////////////////////////////
@@ -178,7 +192,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   
   func makeSlider() {
     slider = HorizontalItemList(inView: view)
-    slider.didSelectItem = {index in
+    slider.didSelectItem = { index in
       self.items.append(index)
       self.tableView.reloadData()
       self.transitionCloseMenu()
