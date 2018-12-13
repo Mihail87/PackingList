@@ -86,14 +86,24 @@ class ViewController: UIViewController {
   /// - Parameter index: identify the proper item
   func showItem(_ index: Int) {
     let imageView = makeImageView(index: index)
-    view.addSubview(imageView)
+    let containerView = UIView(frame: imageView.frame)
+    view.addSubview(containerView)
+    containerView.addSubview(imageView)
+    containerView.translatesAutoresizingMaskIntoConstraints = false
     
-    let conX = imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-    let conBottom = imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: imageView.frame.height)
-    let conWidth = imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.33, constant: -50.0)
-    let conHeight = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
     
-    NSLayoutConstraint.activate([conX, conBottom, conWidth, conHeight])
+    
+    let conX = containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+    let conBottom = containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: containerView.frame.height)
+    let conWidth = containerView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.33, constant: -50.0)
+    let conHeight = containerView.heightAnchor.constraint(equalTo: containerView.widthAnchor)
+    
+    let imageY = imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+    let imageX = imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
+    let imageWidth = imageView.widthAnchor.constraint(equalTo: containerView.widthAnchor)
+    let imageHeight = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
+    
+    NSLayoutConstraint.activate([conX, conBottom, conWidth, conHeight, imageY, imageX, imageWidth, imageHeight])
     
     // Update the layout - otherwise it will be done right before the animation starts and it will look buggy
     view.layoutIfNeeded()
@@ -104,7 +114,7 @@ class ViewController: UIViewController {
 //        self.view.layoutIfNeeded()
 //    }
     
-    UIView.animate(withDuration: 0.5,
+    UIView.animate(withDuration: 0.7,
                    delay: 0,
                    usingSpringWithDamping: 0.5,
                    initialSpringVelocity: 6,
@@ -116,29 +126,26 @@ class ViewController: UIViewController {
                 },
                    completion: nil)
     
-    view.layoutIfNeeded()
-
-    // I've added the closure directly in the param list
-//    let animateItems: () -> Void = {
-//        conBottom.constant = imageView.frame.height
-//        conWidth.constant = -50.0
-//        self.view.layoutIfNeeded()
-//    }
-
-    // I forgot to remove the image view from the superview... Because they will keep piling up
+    delay(seconds: 1.0, completion: {
+        UIView.transition(with: containerView,
+                          duration: 0.6,
+                          options: .transitionFlipFromBottom,
+                          animations: {
+                            imageView.removeFromSuperview()
+                          },
+                          completion: { _ in
+                            containerView.removeFromSuperview()
+                          })
+    })
+    
+    // Animate the same way - going down. This was replaced by the View Transition animation above
 //    UIView.animate(withDuration: 0.5, delay: 0.7, options: .curveEaseInOut, animations: {
 //        conBottom.constant = imageView.frame.height
 //        conWidth.constant = -50.0
 //        self.view.layoutIfNeeded()
-//    }, completion: nil)
-    
-    UIView.animate(withDuration: 0.5, delay: 0.7, options: .curveEaseInOut, animations: {
-        conBottom.constant = imageView.frame.height
-        conWidth.constant = -50.0
-        self.view.layoutIfNeeded()
-    }) { _ in
-        imageView.removeFromSuperview()
-    }
+//    }) { _ in
+//        imageView.removeFromSuperview()
+//    }
 
   }
 
